@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block content %}
+  <link rel="stylesheet" href="/static/training.css">
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+    }
+
+    .sidebar {
+      width: 250px;
+      background-color: #343a40;
+      color: white;
+      padding: 20px;
+    }
+
+    .sidebar h4 {
+      color: #ffffff;
+      margin-bottom: 20px;
+    }
+
+    .sidebar button {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .main {
+      flex-grow: 1;
+      padding: 30px;
+      background-color: #f8f9fa;
+      overflow-y: auto;
+    }
+  </style>
+
+  <p data-user-id="{{ current_user.id }}"></p>
+
+
+
+
+  <div class="d-flex vh-100">
+    <!-- サイドバー -->
+<!-- bg-light rounded -->
+    <div class="sidebar d-flex flex-column bg-light p-3 rounded">
+      <h4 class="text-dark mb-5 text-center">問題選択</h4>
+      <h5 class="text-dark mb-2">難易度</h5>
+      
+      <div class="d-flex justify-content-between text-dark mtb-2">
+        <h6 class="mb-0">Hard：</h6>
+        <span>★★★</span>
+      </div>
+
+      <div class="d-flex justify-content-between text-dark mtb-2">
+        <h6 class="mb-0">Normal：</h6>
+        <span>★★</span>
+      </div>
+      
+      <div class="d-flex justify-content-between text-dark mtb-2">
+        <h6 class="mb-0">Easy：</h6>
+        <span>★</span>
+      </div>
+    
+      <br>
+      <br>
+      
+
+
+      <form action="/training" method="GET" class="d-grid gap-3 p-4 ">
+        <button type="submit" name="problem" value="hard"
+          class="btn btn-outline-danger d-flex justify-content-center align-items-center fs-3" style="height: 60px;">
+          ★★★
+        </button>
+
+        <button type="submit" name="problem" value="normal"
+          class="btn btn-outline-primary d-flex justify-content-center align-items-center fs-3" style="height: 60px;">
+          ★★
+        </button>
+
+        <button type="submit" name="problem" value="easy"
+          class="btn btn-outline-success d-flex justify-content-center align-items-center fs-3" style="height: 60px;">
+          ★
+        </button>
+
+      </form>
+
+      
+    </div>
+
+    
+
+    <!-- メイン -->
+  <div class="flex-grow-1 bg-white p-4">
+      <h2 class="fw-bold text-primary mb-3">ブラインドタッチトレーニング</h2>
+      <p class="text-muted">左のボタンから難易度を変更することができます。</p>
+      <p class="fs-5">現在の難易度：<span class="badge bg-secondary fs-2">
+        {% if problem %}
+          {{ problem | capitalize }}
+        {% else %}
+          ---
+        {% endif %}</span>
+      </p>
+
+      <div class="mt-4 border rounded bg-light p-4 text-center">
+        <p id="target" class="fs-2 fw-bold text-primary" style="
+          font-size: 1.5em;
+          white-space: pre-wrap;
+          overflow-x: auto;
+          font-family: monospace;">CLICK START!!</p>
+        <p id="result" class="fs-1 text-success fw-bold"></p>
+      </div>
+    </div>
+  </div>
+  </div>
+
+
+
+
+
+
+
+
+  
+
+  <script src="/static/main.js"></script>
+{% endblock %}

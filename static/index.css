@@ -1,0 +1,37 @@
+@charset "utf-8";
+
+main {
+  background-color: pink;
+  margin: 0 auto;
+  width: 480px;
+
+
+  
+}
+
+img {
+  vertical-align: bottom;
+ 
+}
+
+
+.btn {
+  display: flex;
+  /* justify-content:space-between; */
+  background-color: skyblue;
+  margin-top: 8px;
+}
+
+p {
+  text-align: center;
+  border: 1px solid #ccc;
+  background-color: tomato;
+  padding: 8px 16px;
+  margin: ;
+  width: calc((100% - 32px) / 2);
+}
+
+.container {
+  display: flex;
+  margin-top: 8px;
+}

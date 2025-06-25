@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+
+<div class="container mt-5">
+  <h1 class="mb-3 text-center fw-bold">パーソナル記録ページ</h1>
+  <p class="text-center text-muted">各難易度での成績と推移を確認できます</p>
+</div>
+
+<a href="{{ url_for('user_maintenance') }}" class="btn btn-outline-secondary rounded-pill px-4 mb-5">
+  ← ユーザー管理に戻る
+</a>
+
+<h3 class="mb-3">{{ user.username }}さんの記録</h3>
+
+
+<!-- 成績テーブル -->
+<div class="container mb-5">
+  <div class="row g-4">
+    {% for level, records, color in [
+      ('🟢 Easy', easy_records, 'success'),
+      ('🔵 Normal', normal_records, 'primary'),
+      ('🔴 Hard', hard_records, 'danger')
+    ] %}
+    <div class="col-md-4">
+      <div class="card shadow-sm">
+        <div class="card-header bg-{{ color }} text-white fw-bold">
+          {{ level }}
+        </div>
+        <div class="card-body p-0">
+          <table class="table table-striped table-hover mb-0">
+            <thead class="table-light">
+              <tr><th>順位</th><th>日付</th><th>タイム</th></tr>
+            </thead>
+            <tbody>
+              {% for record in records %}
+              <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ record.date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                <td>{{ "%.2f"|format(record.time) }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- カテゴリ選択 -->
+<!-- <div class="container mb-4">
+  <div class="text-center">
+    <label for="categorySelect" class="form-label fw-bold">表示する難易度</label>
+    <select id="categorySelect" class="form-select w-auto d-inline-block">
+      <option value="easy">Easy</option>
+      <option value="normal">Normal</option>
+      <option value="hard">Hard</option>
+    </select>
+  </div>
+</div> -->
+
+<!-- グラフ -->
+<!-- <div class="container">
+  <div class="row g-4">
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-header bg-info text-white">タイムの推移</div>
+        <div class="card-body">
+          <canvas id="timeChart" height="300"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-header bg-info text-white">トレーニング回数</div>
+        <div class="card-body">
+          <canvas id="countChart" height="300"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<!-- グラフスクリプト -->
+<!-- <script>
+  console.log('Chart.js version:', Chart.version);
+  console.log('Time adapter check:', Chart._adapters._date);
+  console.log(window.Chart); // undefinedなら読み込まれていない
+  console.log(window.Chart._adapters._date); // undefinedならアダプタ未登録
+  const timeChart = new Chart(document.getElementById('timeChart'), {
+    type: 'line',
+    data: {
+      datasets: [
+        {
+          label: 'Easy',
+          data: [],
+          borderColor: 'green',
+          fill: false,
+          parsing: false,
+          hidden: false,
+          xAxisID: 'x-easy'
+        },
+        {
+          label: 'Normal',
+          data: [],
+          borderColor: 'blue',
+          fill: false,
+          parsing: false,
+          hidden: true,
+          xAxisID: 'x-normal'
+        },
+        {
+          label: 'Hard',
+          data: [],
+          borderColor: 'red',
+          fill: false,
+          parsing: false,
+          hidden: true,
+          xAxisID: 'x-hard'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        'x-easy': {
+          type: 'time',
+          display: true,
+          title: { display: true, text: '日付（Easy）' },
+          time: { displayFormats: { day: 'yy/M/d' } }
+        },
+        'x-normal': {
+          type: 'time',
+          display: false,
+          title: { display: true, text: '日付（Normal）' },
+          time: { displayFormats: { day: 'yy/M/d' } }
+        },
+        'x-hard': {
+          type: 'time',
+          display: false,
+          title: { display: true, text: '日付（Hard）' },
+          time: { displayFormats: { day: 'yy/M/d' } }
+        },
+        y: {
+          title: { display: true, text: 'タイム（秒）' },
+          ticks: { callback: val => val + '秒' }
+        }
+      }
+    }
+  });
+
+  const countChart = new Chart(document.getElementById('countChart'), {
+    type: 'bar',
+    data: {
+      labels: [],
+      datasets: [{
+        label: '回数',
+        backgroundColor: '#0d6efd',
+        data: []
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false }
+      }
+    }
+  });
+
+  async function fetchChartData() {
+    const res = await fetch("/api/data");
+    const data = await res.json();
+    console.log(data);
+
+    timeChart.data.datasets[0].data = data.ex.map((x, i) => ({ x, y: data.ey[i] }));
+    timeChart.data.datasets[1].data = data.nx.map((x, i) => ({ x, y: data.ny[i] }));
+    timeChart.data.datasets[2].data = data.hx.map((x, i) => ({ x, y: data.hy[i] }));
+    timeChart.update();
+
+    countChart.data.labels = data.x;
+    countChart.data.datasets[0].data = data.y;
+    countChart.update();
+  }
+  setInterval(fetchChartData, 10000);
+  
+  // fetchChartData();
+
+  document.getElementById('categorySelect').addEventListener('change', function () {
+    const selected = this.value;
+    timeChart.data.datasets.forEach(ds => {
+      ds.hidden = ds.label.toLowerCase() !== selected;
+      timeChart.options.scales['x-easy'].display = selected === 'easy';
+      timeChart.options.scales['x-normal'].display = selected === 'normal';
+      timeChart.options.scales['x-hard'].display = selected === 'hard';
+    });
+    timeChart.update();
+  });
+</script> -->
+
+{% endblock %}

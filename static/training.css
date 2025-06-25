@@ -1,0 +1,40 @@
+@charset "utf-8";
+
+
+body {
+  
+}
+
+p {
+  
+
+}
+
+
+#target {
+  font-family: 'Courier New', Courier, monospace;
+  text-align: center;
+  width: 960px;
+  text-align: center;
+  background-color: #fff;
+  font-size: 48px;
+  margin-top: 160px;
+  letter-spacing: .2em;
+}
+
+#rusult {
+  font-family: 'Courier New', Courier, monospace;
+  text-align: center;
+  width: 960px;
+  text-align: center;
+  background-color: #fff;
+  font-size: 48px;
+  margin-top: 480px;
+  letter-spacing: .2em;
+}
+
+
+
+/* .wrong::after {
+  content: "rong";
+} */

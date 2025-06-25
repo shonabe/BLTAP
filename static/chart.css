@@ -1,0 +1,17 @@
+@charset 'utf-8';
+
+
+.chart-container {
+  display: flex;
+  gap: 20px;           /* グラフ間のスペース */
+  justify-content: center; /* 真ん中に並べる */
+}
+
+
+canvas {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  width: 200px !important;   /* ← Bootstrapのmax-width: 100%を打ち消す */
+  height: 1500px !important;
+  
+}

@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+
+
+
+{% block content %}
+
+<style>
+.speech-bubble {
+  position: relative;
+  background: #fff;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  padding: 1rem;
+  max-width: 600px;
+  font-size: 16px;
+  line-height: 1.6;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* ↓↓↓ 左側の三角を削除し、下方向のみに変更 ↓↓↓ */
+.speech-bubble::before {
+  content: "";
+  position: absolute;
+  bottom: -20px;
+  left: 450px;
+  border: 10px solid transparent;
+  border-top-color: #ccc;
+}
+
+.speech-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -18px;
+  left: 452px;
+  border: 9px solid transparent;
+  border-top-color: #fff;
+}
+</style>
+
+
+
+<main class="bg-light bg-gradient py-5">
+  <div class="container">
+
+    <!-- アプリ紹介 -->
+    <section class="intro mb-5 text-center">
+      <h2 class="fw-bold display-5 text-primary mb-3">BLTAP<span style="font-size: 0.6em;">とは？</span></h2>
+      <p class="lead">ブラインドタッチをマスターするための無料タイピングトレーニングアプリです。<br>初心者から上級者まで対応！</p>
+    </section>
+
+    <!-- ブラインドタッチとは -->
+ 
+    <section class="blind-touch mb-5">
+      <h2 class="fw-bold text-center text-secondary mb-4">ブラインドタッチとは？</h2>
+
+      <div class="row align-items-center g-4">
+        <div class="col-md-6 text-center">
+          <img src="/static/homeposition.png" alt="ホームポジション" class="img-fluid rounded shadow-sm" style="max-width: 450px;">
+          <p class="text-muted small mt-2">
+            出典：<a href="https://happylilac.net/sy-keyboard03.html" target="_blank" class="text-muted text-decoration-underline">https://happylilac.net/sy-keyboard03.html</a>
+          </p>
+        </div>
+
+        <div class="col-md-6 position-relative">
+          <div class="speech-bubble position-relative">
+            <p class="mb-2">ブラインドタッチとは、キーボードを見ずに文字を入力する技術です。</p>
+            <p class="mb-2">正しい指の配置を覚えることで、より速く正確にタイピングが可能に。画面に集中したままの入力で作業効率が向上します。</p>
+            <p class="mb-0">ホームポジション（FとJに人差し指）を意識し、各指に割り当てられたキーを覚えましょう。</p>
+
+            <!-- タイピン君を100px右に移動 -->
+            <img src="/static/TAIPIN-KUN.png" alt="TAIPIN-KUN"
+                style="position: absolute; left: 400px; bottom: -120px; height: 100px;">
+            
+          </div>
+        </div>
+        
+      </div>
+    </section>
+
+
+
+
+
+
+    <!-- 特徴 -->
+    <section class="features mb-5 text-center">
+      <h2 class="fw-bold text-primary mb-4">このアプリの主な特徴</h2>
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item fs-5">✅ レベル別トレーニング</li>
+            <li class="list-group-item fs-5">⏱ リアルタイム速度計測</li>
+            <li class="list-group-item fs-5">🏆 ランキング機能</li>
+            <li class="list-group-item fs-5">📊 今日の成果を可視化</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta text-center">
+      <h2 class="fw-bold mb-4 text-success">今すぐチャレンジ！</h2>
+      <div class="d-grid gap-3 d-md-block">
+        <a href="{{ url_for('register') }}" class="btn btn-success btn-lg shadow rounded-pill me-md-3 mb-2 mb-md-0">新規登録（無料）</a>
+        <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg shadow rounded-pill">ログインしてトレーニング開始</a>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+{% endblock %}
