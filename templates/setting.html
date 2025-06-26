@@ -6,21 +6,23 @@
   <h1 class="mb-4 text-center fw-bold display-5 text-primary">トレーニングメニュー</h1>
 
   <!-- 目標・進捗カード -->
-  <!-- <div class="row mb-5 justify-content-center">
+  <div class="row mb-5 justify-content-center">
     <div class="col-md-8">
       <div class="card shadow-lg border-0 rounded-4 p-4 bg-light">
         <h3 class="mb-3">🎯 今日の成果</h3>
         <p class="lead">集中してタイピング練習を行い、前回のベストタイムを更新しましょう！</p>
         <div class="progress" style="height: 25px;">
-          <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: 65%;" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">65%</div>
+          <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
         </div>
-        <small class="text-muted">`目標達成まであと${}%`</small>
+        <small class="text-muted">目標達成まであと0%</small>
       </div>
     </div>
     <div class="col-md-4">
       <div class="card shadow-lg border-0 rounded-4 p-4 bg-light">
-        <h3 class="mb-3">目標設定</h3>
- 
+        <div class="d-flex align-items-center mb-3 gap-3">
+          <h3 class="mb-0">目標設定</h3>
+          <button id="reset-Btn" class="btn btn-success btn-sm w-50 ms-5">リセット</button>
+        </div>
         <div class="container mt-4">
           <div class="row">
             <div class="col-md-6">
@@ -28,25 +30,25 @@
               <input
                 type="number"
                 class="form-control fs-1 text-end"
-                id="trainingInput"
-                min="0"
+                id="training-input" 
+                min="1"
                 step="1"
-                placeholder="0"
+                placeholder="1"
                 style="height: 4rem;"
               >
-              <button id="saveBtn" class="btn btn-primary btn-sm mt-2 w-50">決定</button>
+              <button id="save-Btn" class="btn btn-primary btn-sm mt-2 w-50">決定</button>
+              
             </div>
 
             <div class="col-md-6 text-center">
               <div class="fw-bold fs-1">残り</div>
-              <div id="remainingDisplay" class="fw-bold fs-1 text-primary">--</div>
-              <button id="runBtn" class="btn btn-success btn-sm mt-3 w-50">1回実行</button>
+              <div id="remaining-Display" class="fw-bold fs-1 text-primary">--</div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div> -->
+  </div>
 
   <!-- トレーニングメニュー一覧 -->
   <div class="row g-4 justify-content-center">
@@ -96,36 +98,91 @@
 </div>
 
 
-<!-- <script>
-  const input = document.getElementById('trainingInput');
-  const saveBtn = document.getElementById('saveBtn');
-  const display = document.getElementById('remainingDisplay');
 
-  // ページ読み込み時にセッションストレージから読み込み
-  window.addEventListener('DOMContentLoaded', () => {
-    const stored = sessionStorage.getItem('trainingCount');
-    if (stored !== null) {
-      display.textContent = stored;
-      
+<script>
+  // 目標設定処理
+  const saveBtn = document.getElementById("save-Btn");
+  const trainingInput = document.getElementById("training-input");
+  const remainingDisplay = document.getElementById("remaining-Display");
+  saveBtn.addEventListener("click", function () {
+    const targetCount = parseInt(trainingInput.value);
+    if (isNaN(targetCount) || targetCount <= 0) {
+      alert("有効な数値を入力してください。");
+      return;
+    }
+
+    localStorage.setItem("targetCount", targetCount);
+    localStorage.setItem("remainingCount", targetCount);
+    
+    if (remainingDisplay) remainingDisplay.textContent = targetCount;
+
+    saveBtn.disabled = true;
+    localStorage.setItem("saveBtnDisabled", "true");
+  });
+
+  // リセット処理
+  const resetBtn = document.getElementById("reset-Btn");
+  resetBtn.addEventListener("click", () => {
+    saveBtn.disabled = false;
+    localStorage.removeItem("targetCount");
+    localStorage.removeItem("remainingCount");
+    localStorage.removeItem("saveBtnDisabled");
+    
+    trainingInput.value = 0;
+    remainingDisplay.textContent = "--";
+
+    progressBar.style.width = "0%";
+    progressBar.setAttribute("aria-valuenow", 0);
+    progressBar.textContent = "0%";
+
+
+  });
+
+  // 再読み込み処理
+  document.addEventListener("DOMContentLoaded", () => {
+    const remaining = localStorage.getItem("remainingCount");
+    remainingDisplay.textContent = remaining !== null ? remaining : "--";
+
+    const target = localStorage.getItem("targetCount");
+    if (target !== null) {
+      trainingInput.value = target;
+    }
+
+    saveBtn.disabled = (localStorage.getItem("saveBtnDisabled") === "true"); 
+  });
+
+  // 進捗バー更新
+  const progressBar = document.querySelector(".progress-bar");
+  function updateProgressBar(remaining, target) {
+    const percent = 100 * (target - remaining) / target;
+    if (progressBar) {
+      progressBar.style.width = `${percent}%`;
+      progressBar.setAttribute("aria-valuenow", percent);
+      progressBar.textContent = `${Math.round(percent)}%`;
+    }
+
+    const progressText = document.querySelector(".text-muted");
+    if (progressText) {
+      progressText.textContent = `目標達成まであと ${remaining} 回`;
+    }
+  }
+
+  // 最初に残り回数・進捗を表示
+  window.addEventListener("DOMContentLoaded", () => {
+    const remaining = localStorage.getItem("remainingCount");
+    const target = localStorage.getItem("targetCount");
+
+    if (remaining !== null && target !== null) {
+      if (remainingDisplay) remainingDisplay.textContent = remaining;
+      updateProgressBar(remaining, target);
     }
   });
 
-  // ボタンを押すとセッションストレージに保存＆表示更新
-  saveBtn.addEventListener('click', () => {
-    const value = parseInt(input.value);
-    if (!isNaN(value) && value >= 0) {
-      sessionStorage.setItem('trainingCount', value);
-      display.textContent = value;
-      this.disabled = true;
-    } else {
-      alert('0以上の数字を入力してください');
-    }
-  });
-</script> -->
+
+</script>
 
 
-
-<script src="/static/main.js"></script>
+<!-- <script src="/static/main.js"></script> -->
 
 
 
