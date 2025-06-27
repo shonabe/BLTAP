@@ -62,7 +62,11 @@ document.addEventListener("DOMContentLoaded", async function () {
         result.textContent = ` ${elapseTime} seconds `;    
         // console.log(elapseTime);
 
+
+
+
         
+
         // 残りトレーニング回数を減らす処理
         function reduceCount() {
           let remaining = parseInt(localStorage.getItem("remainingCount") || "0");

@@ -51,7 +51,7 @@
 </div>
 
 <!-- カテゴリ選択 -->
-<!-- <div class="container mb-4">
+<div class="container mb-4">
   <div class="text-center">
     <label for="categorySelect" class="form-label fw-bold">表示する難易度</label>
     <select id="categorySelect" class="form-select w-auto d-inline-block">
@@ -60,10 +60,10 @@
       <option value="hard">Hard</option>
     </select>
   </div>
-</div> -->
+</div>
 
 <!-- グラフ -->
-<!-- <div class="container">
+<div class="container">
   <div class="row g-4">
     <div class="col-md-6">
       <div class="card shadow-sm">
@@ -82,15 +82,23 @@
       </div>
     </div>
   </div>
-</div> -->
+</div>
 
 <!-- グラフスクリプト -->
-<!-- <script>
-  console.log('Chart.js version:', Chart.version);
-  console.log('Time adapter check:', Chart._adapters._date);
-  console.log(window.Chart); // undefinedなら読み込まれていない
-  console.log(window.Chart._adapters._date); // undefinedならアダプタ未登録
-  const timeChart = new Chart(document.getElementById('timeChart'), {
+<!-- <canvas id="timeChart" width="600" height="400"></canvas>
+<canvas id="countChart" width="600" height="400"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/dayjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-dayjs@1.0.1/dist/chartjs-adapter-dayjs.min.js"></script>
+<script>
+  if (Chart._adapters && Chart._adapters._date && dayjs) {
+  Chart._adapters._date.override(window['chartjs-adapter-dayjs']);
+  } 
+  
+  const ctx = document.getElementById('timeChart').getContext('2d');
+
+  const timeChart = new Chart(ctx, {
     type: 'line',
     data: {
       datasets: [

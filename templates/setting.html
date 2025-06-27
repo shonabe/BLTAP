@@ -17,6 +17,7 @@
         <small class="text-muted">目標達成まであと0%</small>
       </div>
     </div>
+
     <div class="col-md-4">
       <div class="card shadow-lg border-0 rounded-4 p-4 bg-light">
         <div class="d-flex align-items-center mb-3 gap-3">
@@ -44,11 +45,19 @@
               <div class="fw-bold fs-1">残り</div>
               <div id="remaining-Display" class="fw-bold fs-1 text-primary">--</div>
             </div>
+
+            
+
+
           </div>
         </div>
       </div>
     </div>
   </div>
+  
+  <!-- <img id="celebration-gif" src="https://i.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" alt="お祝い" 
+     style="width: 200px; height: auto; display: block; margin: 0 auto;" /> -->
+
 
   <!-- トレーニングメニュー一覧 -->
   <div class="row g-4 justify-content-center">
@@ -98,6 +107,8 @@
 </div>
 
 
+<!-- confettiライブラリ -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 
 <script>
   // 目標設定処理
@@ -135,10 +146,34 @@
     progressBar.setAttribute("aria-valuenow", 0);
     progressBar.textContent = "0%";
 
-
   });
 
   // 再読み込み処理
+  function celebrateSuccess() {
+    // const celebrationGif = document.getElementById("celebration-gif");
+    // celebrationGif.style.display = "block";
+
+    
+    const duration = 3000;
+    const animationEnd = Date.now() + duration;
+
+    const confettiIntervalID = setInterval(() => {
+      confetti({
+        particleCount: 5,
+        angle: 90,
+        spread: 90,
+        origin: { y: 0.6 },
+        colors: ['#FFD700', '#FFEC8B'], 
+      });
+      
+
+      if (Date.now() > animationEnd) {
+        clearInterval(confettiIntervalID);
+      }
+    }, 100); 
+  }
+
+ 
   document.addEventListener("DOMContentLoaded", () => {
     const remaining = localStorage.getItem("remainingCount");
     remainingDisplay.textContent = remaining !== null ? remaining : "--";
@@ -148,7 +183,11 @@
       trainingInput.value = target;
     }
 
-    saveBtn.disabled = (localStorage.getItem("saveBtnDisabled") === "true"); 
+    saveBtn.disabled = (localStorage.getItem("saveBtnDisabled") === "true");
+
+    if (remaining === "0") {
+      celebrateSuccess(); 
+    } 
   });
 
   // 進捗バー更新
